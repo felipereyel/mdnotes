@@ -1,5 +1,9 @@
-import { factory } from './app';
+import { getApp } from './app';
+import { getConfig } from './config';
+import { getRepositories } from './repositories';
 
-const options = factory(3333);
-const server = Bun.serve(options);
-console.log(`Listening on http://localhost:${server.port}`);
+const config = getConfig();
+const repos = getRepositories(config);
+const options = getApp(config, repos);
+
+Bun.serve(options);

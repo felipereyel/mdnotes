@@ -1,4 +1,5 @@
 import { z } from 'zod';
 
-export const body = z.object({ description: z.string() });
-export type Body = z.infer<typeof body>;
+export const newForm = z.object({ name: z.string() });
+
+export const updateForm = z.object({ content: z.string() });

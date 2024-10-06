@@ -1,4 +1,4 @@
-# Honotes
+# MDNotes
 
 To install dependencies:
 
