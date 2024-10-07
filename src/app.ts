@@ -7,7 +7,7 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 
 import { newForm, updateForm } from './schema';
-import { ClosedSidebar, Editor, Home, NewPopup, OpenSidebar } from './components';
+import { Sidebar, Editor, Home, NewPopup } from './components';
 
 export const getApp = (cfg: Config, repos: Repositories): Serve<any> => {
   const app = new Hono();
@@ -15,19 +15,19 @@ export const getApp = (cfg: Config, repos: Repositories): Serve<any> => {
   app.get('/', async (c) => c.html(Home()));
 
   app.get('/_ok', async (c) => c.text('OK'));
-  app.get('/_new', async (c) => c.html(NewPopup()));
-  app.get('/_closedsidebar', async (c) => c.html(ClosedSidebar()));
 
-  app.get('/_opensidebar', async (c) => {
-    const paths = await repos.files.getNotes();
-    return c.html(OpenSidebar(paths));
-  });
+  app.get('/_new', async (c) => c.html(NewPopup()));
 
   app.post('/new', zValidator('form', newForm), async (c) => {
     const { name } = c.req.valid('form');
     await repos.files.createNote(name);
     c.header('HX-Redirect', `/${name}`);
     return c.text('OK');
+  });
+
+  app.get('/_sidebar', async (c) => {
+    const paths = await repos.files.getNotes();
+    return c.html(Sidebar({ paths }));
   });
 
   app.get('/:path{.*}', async (c) => {
