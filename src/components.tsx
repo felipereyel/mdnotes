@@ -1,4 +1,5 @@
 import type { JSX } from 'hono/jsx';
+import { marked } from "marked";
 
 const page = (title: string, Child: JSX.HTMLAttributes) => (
   <html>
@@ -12,7 +13,11 @@ const page = (title: string, Child: JSX.HTMLAttributes) => (
         integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
         crossorigin="anonymous"
       ></script>
+      <link rel="stylesheet" href="https://unpkg.com/@tailwindcss/typography@0.1.2/dist/typography.min.css"></link>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+      <style>
+        {".recwhite * { color: red; }"}
+      </style>
     </head>
     <body id="body" class="bg-slate-900 text-white max-h-full">
       {Child}
@@ -153,6 +158,17 @@ const TextAreaEditor = (props: { path: string, content: string }) => (
   </textarea>
 );
 
-export const Editor = (path: string, content: string) => BaseLayout({
+export const NoteEditor = (path: string, content: string) => BaseLayout({
   title: path, Child: <TextAreaEditor path={path} content={content} />
+});
+
+const parseContent = async (content: string) => {
+  return { __html: await marked.parse(content, {}) };
+}
+
+export const NoteViewer = async (path: string, content: string) => BaseLayout({
+  title: path, Child:
+    <div class="w-full h-full p-4 prose">
+      <div class="not-prose " dangerouslySetInnerHTML={await parseContent(content)}></div>
+    </div>
 });

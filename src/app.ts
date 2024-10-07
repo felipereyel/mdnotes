@@ -7,7 +7,7 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 
 import { newForm, updateForm } from './schema';
-import { Sidebar, Editor, Home, NewPopup } from './components';
+import { Sidebar, NoteEditor, Home, NewPopup, NoteViewer } from './components';
 
 export const getApp = (cfg: Config, repos: Repositories): Serve<any> => {
   const app = new Hono();
@@ -32,8 +32,11 @@ export const getApp = (cfg: Config, repos: Repositories): Serve<any> => {
 
   app.get('/:path{.*}', async (c) => {
     const path = c.req.param('path');
+    const edit = c.req.query('edit');
     const content = await repos.files.getNoteContent(path);
-    return c.html(Editor(path, content));
+
+    if (edit) return c.html(NoteEditor(path, content));
+    return c.html(NoteViewer(path, content));
   });
 
   app.post('/:path{.*}', zValidator('form', updateForm), async (c) => {
