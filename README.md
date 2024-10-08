@@ -1,13 +1,7 @@
 # MDNotes
 
-To install dependencies:
+ToDo
 
-```bash
-bun install
-```
-
-To run:
-
-```bash
-bun run dev
-```
+- encryption
+- block path traversal
+- toggle edit/view
