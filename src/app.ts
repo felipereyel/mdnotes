@@ -32,7 +32,7 @@ export const getApp = (cfg: Config, repos: Repositories): Serve<any> => {
 
   app.get('/:path{.*}', async (c) => {
     const path = c.req.param('path');
-    const edit = c.req.query('edit');
+    const edit = c.req.query('edit') != undefined;
     const content = await repos.files.getNoteContent(path);
 
     if (edit) return c.html(NoteEditor(path, content));

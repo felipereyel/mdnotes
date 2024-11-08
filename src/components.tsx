@@ -16,7 +16,7 @@ const page = (title: string, Child: JSX.HTMLAttributes) => (
       <link rel="stylesheet" href="https://unpkg.com/@tailwindcss/typography@0.1.2/dist/typography.min.css"></link>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
       <style>
-        {".recwhite * { color: red; }"}
+        {".viewwhite * { color: white !important; }"}
       </style>
     </head>
     <body id="body" class="bg-slate-900 text-white max-h-full">
@@ -168,7 +168,6 @@ const parseContent = async (content: string) => {
 
 export const NoteViewer = async (path: string, content: string) => BaseLayout({
   title: path, Child:
-    <div class="w-full h-full p-4 prose">
-      <div class="not-prose " dangerouslySetInnerHTML={await parseContent(content)}></div>
-    </div>
+    <div class="w-full h-full p-4 prose viewwhite" dangerouslySetInnerHTML={await parseContent(content)}>
+    </div >
 });
