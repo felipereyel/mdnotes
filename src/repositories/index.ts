@@ -46,6 +46,10 @@ class FileRepository implements IFileRepository {
         await fs.mkdir(folder, { recursive: true });
         await fs.writeFile(this.getNoteFullPath(note), '');
     }
+
+    async deleteNoteContent(note: string): Promise<void> {
+        await fs.unlink(this.getNoteFullPath(note));
+    }
 }
 
 export const getRepositories = (cfg: Config): Repositories => {

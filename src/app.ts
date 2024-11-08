@@ -46,5 +46,12 @@ export const getApp = (cfg: Config, repos: Repositories): Serve<any> => {
     return c.text('OK');
   })
 
+  app.delete('/:path{.*}', async (c) => {
+    const path = c.req.param('path');
+    await repos.files.deleteNoteContent(path);
+    c.header('HX-Redirect', '/');
+    return c.text('OK');
+  });
+
   return { fetch: app.fetch, port: cfg.port, };
 };

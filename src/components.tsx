@@ -83,6 +83,33 @@ const NewButton = () => (
   </div>
 );
 
+const EditButton = (path: string) => (
+  <a
+    href={`/${path}?edit`}
+    class="text-white text-center bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
+  >
+    <span class="material-symbols-outlined">edit</span>
+  </a>
+);
+
+const ViewButton = (path: string) => (
+  <a
+    href={`/${path}`}
+    class="text-white text-center bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
+  >
+    <span class="material-symbols-outlined">visibility</span>
+  </a>
+);
+
+const DeleteButton = (path: string) => (
+  <a
+    hx-delete={`/${path}`}
+    class="text-white text-center bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
+  >
+    <span class="material-symbols-outlined">delete</span>
+  </a>
+);
+
 export const Sidebar = (props: { paths: string[] }) => (
   <div id="drawer-navigation" class="fixed top-0 left-0 z-40 w-64 px-4 pt-1 overflow-y-auto bg-white dark:bg-indigo-800 flex flex-col justify-between h-full">
     <div
@@ -118,7 +145,7 @@ const SidebarButton = () => (
   </div>
 );
 
-const BaseLayout = (props: { title: string, Child: JSX.HTMLAttributes }) => page(props.title,
+const BaseLayout = (props: { delete: boolean, mode: "edit" | "view" | null, title: string, Child: JSX.HTMLAttributes }) => page(props.title,
   <div class="flex flex-col w-full h-full">
     <div class="h-10 w-full bg-indigo-800 flex flex-row items-center px-4 justify-between">
       <SidebarButton />
@@ -131,7 +158,12 @@ const BaseLayout = (props: { title: string, Child: JSX.HTMLAttributes }) => page
           {props.title}
         </h5>
       </div>
-      <NewButton />
+      <div class="flex flex-row items-center space-x-2">
+        {props.delete && props.mode === "edit" ? DeleteButton(props.title) : null}
+        {props.delete && props.mode === "view" ? EditButton(props.title) : null}
+        {props.delete && props.mode === "edit" ? ViewButton(props.title) : null}
+        <NewButton />
+      </div>
     </div>
     <div class="h-full w-full flex flex-row items-center">
       {props.Child}
@@ -140,7 +172,7 @@ const BaseLayout = (props: { title: string, Child: JSX.HTMLAttributes }) => page
 );
 
 export const Home = () => BaseLayout({
-  title: 'Home', Child:
+  title: 'Home', delete: false, mode: null, Child:
     <div class="flex flex-col items-center justify-center w-full h-full">
       <h1 class="text-4xl font-bold text-white mb-4">MDNotes</h1>
     </div>
@@ -159,7 +191,7 @@ const TextAreaEditor = (props: { path: string, content: string }) => (
 );
 
 export const NoteEditor = (path: string, content: string) => BaseLayout({
-  title: path, Child: <TextAreaEditor path={path} content={content} />
+  title: path, delete: true, mode: "edit", Child: <TextAreaEditor path={path} content={content} />
 });
 
 const parseContent = async (content: string) => {
@@ -167,7 +199,7 @@ const parseContent = async (content: string) => {
 }
 
 export const NoteViewer = async (path: string, content: string) => BaseLayout({
-  title: path, Child:
+  title: path, delete: true, mode: "view", Child:
     <div class="w-full h-full p-4 prose viewwhite" dangerouslySetInnerHTML={await parseContent(content)}>
     </div >
 });
