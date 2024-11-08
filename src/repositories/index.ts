@@ -2,6 +2,7 @@ import type { Config } from "../config"
 import type { IFileRepository, Repositories } from "./types";
 
 import fs from "fs/promises"
+import path from "path"
 
 class FileRepository implements IFileRepository {
     private baseFolder: string;
@@ -28,8 +29,16 @@ class FileRepository implements IFileRepository {
         return paths.map((path) => path.replace('.md', ''));
     }
 
-    private getNoteFullPath(path: string): string {
-        return `${this.baseFolder}/${path}.md`;
+    private getNoteFullPath(unsafePath: string): string {
+        const normalized = path.normalize(unsafePath);
+        const fullPath = path.join(this.baseFolder, normalized);
+        const canonicalPath = path.resolve(fullPath);
+
+        if (!canonicalPath.startsWith(path.resolve(this.baseFolder))) {
+            throw new Error('Invalid path');
+        }
+
+        return `${canonicalPath}.md`;
     }
 
     async getNoteContent(note: string): Promise<string> {
