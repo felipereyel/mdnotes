@@ -8,6 +8,7 @@ import { zValidator } from '@hono/zod-validator';
 
 import { newForm, updateForm } from './schema';
 import { Sidebar, NoteEditor, Home, NewPopup, NoteViewer, DeletePopup } from './components';
+import { FileNotFound } from './errors';
 
 export const getApp = (cfg: Config, repos: Repositories): Serve<any> => {
   const app = new Hono();
@@ -62,6 +63,18 @@ export const getApp = (cfg: Config, repos: Repositories): Serve<any> => {
     c.header('HX-Redirect', '/');
     return c.text('OK');
   });
+
+  app.onError((err, c) => {
+    console.error(err);
+
+    if (err instanceof FileNotFound) {
+      c.status(404);
+      return c.text('File not found');
+    }
+
+    c.status(500);
+    return c.text('Internal server error');
+  })
 
   return { fetch: app.fetch, port: cfg.port, };
 };

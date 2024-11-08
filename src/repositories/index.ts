@@ -1,4 +1,5 @@
 import type { Config } from "../config"
+import { FileNotFound } from "../errors";
 import type { IFileRepository, Repositories } from "./types";
 
 import fs from "fs/promises"
@@ -29,7 +30,7 @@ class FileRepository implements IFileRepository {
         return paths.map((path) => path.replace('.md', ''));
     }
 
-    private getNoteFullPath(unsafePath: string): string {
+    private async getNoteFullPath(unsafePath: string): Promise<string> {
         const normalized = path.normalize(unsafePath);
         const fullPath = path.join(this.baseFolder, normalized);
         const canonicalPath = path.resolve(fullPath);
@@ -38,26 +39,34 @@ class FileRepository implements IFileRepository {
             throw new Error('Invalid path');
         }
 
-        return `${canonicalPath}.md`;
+        const fullpath = `${canonicalPath}.md`;
+
+        const exists = await fs.exists(fullpath);
+        if (!exists) throw new FileNotFound(fullpath);
+
+        return fullpath;
     }
 
     async getNoteContent(note: string): Promise<string> {
-        return await fs.readFile(this.getNoteFullPath(note), 'utf-8');
+        const path = await this.getNoteFullPath(note);
+        return await fs.readFile(path, 'utf-8');
     }
 
     async saveNoteContent(note: string, content: string): Promise<void> {
-        await fs.writeFile(this.getNoteFullPath(note), content);
+        const path = await this.getNoteFullPath(note);
+        await fs.writeFile(path, content);
     }
 
     async createNote(note: string): Promise<void> {
-        const path = this.getNoteFullPath(note);
+        const path = await this.getNoteFullPath(note);
         const folder = path.split('/').slice(0, -1).join('/');
         await fs.mkdir(folder, { recursive: true });
-        await fs.writeFile(this.getNoteFullPath(note), '');
+        await fs.writeFile(path, '');
     }
 
     async deleteNoteContent(note: string): Promise<void> {
-        await fs.unlink(this.getNoteFullPath(note));
+        const path = await this.getNoteFullPath(note);
+        await fs.unlink(path);
     }
 }
 
