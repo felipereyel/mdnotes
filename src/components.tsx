@@ -49,7 +49,7 @@ export const NewPopup = () => (
           </button>
         </div>
         <div class="px-2 pt-4 pb-1">
-          <form hx-post="/new" hx-target="#modal" hx-swap="delete">
+          <form hx-post="/_new" hx-target="#modal" hx-swap="delete">
             <div class="flex flex-row items-center justify-between h-10 space-x-2">
               <input
                 name="name"
@@ -72,6 +72,46 @@ export const NewPopup = () => (
   </div>
 );
 
+export const DeletePopup = (path: string) => (
+  <div
+    id="modal"
+    hx-get="/_ok"
+    hx-target="#modal"
+    hx-swap="delete"
+    hx-trigger="click target:#modal"
+    class="flex overflow-y-auto overflow-x-hidden fixed inset-0 z-50 justify-center items-center w-full md:inset-0 max-h-full backdrop-blur-sm"
+  >
+    <div id="modal-content" class="relative w-full max-w-xs max-h-full">
+      <div class="relative bg-white rounded-lg shadow dark:bg-indigo-700">
+        <div class="flex items-center justify-between p-2 border-b rounded-t dark:border-indigo-800">
+          <h3 class="text-xl font-semibold text-indigo-900 dark:text-white">Confirm</h3>
+          <button
+            hx-get="/_ok"
+            hx-target="#modal"
+            hx-swap="delete"
+            type="button"
+            class="text-white bg-transparent hover:bg-indigo-200 hover:text-indigo-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-indigo-800 dark:hover:text-white"
+          >
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="px-2 pt-4 pb-1">
+          <form hx-delete={`/${path}`} hx-target="#modal" hx-swap="delete">
+            <div class="flex flex-col items-center justify-between h-10 space-x-2">
+              <button
+                type="submit"
+                class="h-full px-4 text-white text-center bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-500 rounded overflow-hidden shadow-md"
+              >
+                Delete {path}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 const NewButton = () => (
   <div
     class="text-white text-center bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
@@ -85,7 +125,8 @@ const NewButton = () => (
 
 const EditButton = (path: string) => (
   <a
-    href={`/${path}?edit`}
+    hx-get={`/_redirect/${path}?edit`}
+    hx-trigger="click, keyup[key=='e'] from:body"
     class="text-white text-center bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
   >
     <span class="material-symbols-outlined">edit</span>
@@ -94,7 +135,8 @@ const EditButton = (path: string) => (
 
 const ViewButton = (path: string) => (
   <a
-    href={`/${path}`}
+    hx-get={`/_redirect/${path}`}
+    hx-trigger="click, keyup[key=='Escape'] from:body"
     class="text-white text-center bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
   >
     <span class="material-symbols-outlined">visibility</span>
@@ -103,7 +145,8 @@ const ViewButton = (path: string) => (
 
 const DeleteButton = (path: string) => (
   <a
-    hx-delete={`/${path}`}
+    hx-get={`/_delete/${path}`}
+    hx-trigger="click, keyup[key=='Backspace'] from:body"
     class="text-white text-center bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
   >
     <span class="material-symbols-outlined">delete</span>
@@ -159,7 +202,7 @@ const BaseLayout = (props: { delete: boolean, mode: "edit" | "view" | null, titl
         </h5>
       </div>
       <div class="flex flex-row items-center space-x-2">
-        {props.delete && props.mode === "edit" ? DeleteButton(props.title) : null}
+        {props.delete && props.mode === "view" ? DeleteButton(props.title) : null}
         {props.delete && props.mode === "view" ? EditButton(props.title) : null}
         {props.delete && props.mode === "edit" ? ViewButton(props.title) : null}
         <NewButton />

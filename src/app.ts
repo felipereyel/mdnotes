@@ -7,7 +7,7 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 
 import { newForm, updateForm } from './schema';
-import { Sidebar, NoteEditor, Home, NewPopup, NoteViewer } from './components';
+import { Sidebar, NoteEditor, Home, NewPopup, NoteViewer, DeletePopup } from './components';
 
 export const getApp = (cfg: Config, repos: Repositories): Serve<any> => {
   const app = new Hono();
@@ -18,7 +18,7 @@ export const getApp = (cfg: Config, repos: Repositories): Serve<any> => {
 
   app.get('/_new', async (c) => c.html(NewPopup()));
 
-  app.post('/new', zValidator('form', newForm), async (c) => {
+  app.post('/_new', zValidator('form', newForm), async (c) => {
     const { name } = c.req.valid('form');
     await repos.files.createNote(name);
     c.header('HX-Redirect', `/${name}`);
@@ -28,6 +28,16 @@ export const getApp = (cfg: Config, repos: Repositories): Serve<any> => {
   app.get('/_sidebar', async (c) => {
     const paths = await repos.files.getNotes();
     return c.html(Sidebar({ paths }));
+  });
+
+  app.get('/_delete/:path{.*}', async (c) => c.html(DeletePopup(c.req.param('path'))));
+
+  app.get('/_redirect/:path{.*}', async (c) => {
+    const path = c.req.param('path');
+    const query = c.req.query();
+    const urlsearch = new URLSearchParams(query).toString();
+    c.header('HX-Redirect', `/${path}?${urlsearch}`);
+    return c.text('OK');
   });
 
   app.get('/:path{.*}', async (c) => {
