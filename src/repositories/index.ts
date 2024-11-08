@@ -30,7 +30,7 @@ class FileRepository implements IFileRepository {
         return paths.map((path) => path.replace('.md', ''));
     }
 
-    private async getNoteFullPath(unsafePath: string): Promise<string> {
+    private getNoteFullPath(unsafePath: string): string {
         const normalized = path.normalize(unsafePath);
         const fullPath = path.join(this.baseFolder, normalized);
         const canonicalPath = path.resolve(fullPath);
@@ -39,16 +39,12 @@ class FileRepository implements IFileRepository {
             throw new Error('Invalid path');
         }
 
-        const fullpath = `${canonicalPath}.md`;
-
-        const exists = await fs.exists(fullpath);
-        if (!exists) throw new FileNotFound(fullpath);
-
-        return fullpath;
+        return `${canonicalPath}.md`;
     }
 
     async getNoteContent(note: string): Promise<string> {
         const path = await this.getNoteFullPath(note);
+        if (!await fs.exists(path)) throw new FileNotFound(note)
         return await fs.readFile(path, 'utf-8');
     }
 
