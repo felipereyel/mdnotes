@@ -55,6 +55,7 @@ export const NewPopup = () => (
                 name="name"
                 id="name"
                 placeholder="Name"
+                hx-trigger="keyup consume"
                 class="bg-slate-900 border border-indigo-300 text-indigo-900 text-sm rounded block w-full p-2.5 dark:bg-indigo-800 dark:border-indigo-500 dark:placeholder-indigo-400 dark:text-white"
                 required
               ></input>
