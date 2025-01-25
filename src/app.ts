@@ -4,6 +4,7 @@ import type { Config } from './config';
 import type { Repositories } from './repositories/types';
 
 import { Hono } from 'hono';
+import { serveStatic } from 'hono/bun';
 import { zValidator } from '@hono/zod-validator';
 
 import { newForm, updateForm } from './schema';
@@ -40,6 +41,13 @@ export const getApp = (cfg: Config, repos: Repositories): Serve<any> => {
     c.header('HX-Redirect', `/${path}?${urlsearch}`);
     return c.text('OK');
   });
+
+  app.use("/_assets/*", serveStatic({
+    root: "./assets",
+    rewriteRequestPath: (path) => path.replace(/^\/_assets/, ''),
+    onFound: (_path, c) => c.header('Cache-Control', 'max-age=3600')
+    ,
+  }));
 
   app.get('/:path{.*}', async (c) => {
     const path = c.req.param('path');

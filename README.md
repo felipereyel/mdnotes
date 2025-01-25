@@ -2,6 +2,8 @@
 
 ToDo
 
+- improve dockerfile 
+- handle sigterm/kill/int
 - encryption
 - readme
 

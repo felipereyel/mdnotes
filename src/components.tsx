@@ -5,16 +5,16 @@ const page = (title: string, Child: JSX.HTMLAttributes) => (
   <html>
     <head>
       <title>{title} | MDNotes</title>
+
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <script src="https://cdn.tailwindcss.com"></script>
-      <script
-        src="https://unpkg.com/htmx.org@1.9.6"
-        integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
-        crossorigin="anonymous"
-      ></script>
-      <link rel="stylesheet" href="https://unpkg.com/@tailwindcss/typography@0.1.2/dist/typography.min.css"></link>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+      <link rel="icon" type="image/x-icon" href="/_assets/favicon.ico" />
+      <link rel="stylesheet" href="/_assets/tailwind-typography.css"></link>
+
+      <script src="/_assets/htmx.js"></script>
+      <script src="/_assets/tailwind.js"></script>
+
       <style>
         {".viewwhite * { color: white !important; }"}
       </style>
@@ -43,9 +43,9 @@ export const NewPopup = () => (
             hx-target="#modal"
             hx-swap="delete"
             type="button"
-            class="text-white bg-transparent hover:bg-indigo-200 hover:text-indigo-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-indigo-800 dark:hover:text-white"
+            class="bg-transparent hover:bg-indigo-200 hover:text-indigo-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-indigo-800 dark:hover:text-white"
           >
-            <span class="material-symbols-outlined">close</span>
+            <img src="/_assets/close.svg" alt="close" />
           </button>
         </div>
         <div class="px-2 pt-4 pb-1">
@@ -63,7 +63,7 @@ export const NewPopup = () => (
                 type="submit"
                 class="w-10 h-full text-white text-center bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-500 rounded overflow-hidden shadow-md"
               >
-                <span class="material-symbols-outlined">add</span>
+                <img src="/_assets/add.svg" alt="add" class="w-full h-full" />
               </button>
             </div>
           </form>
@@ -91,9 +91,9 @@ export const DeletePopup = (path: string) => (
             hx-target="#modal"
             hx-swap="delete"
             type="button"
-            class="text-white bg-transparent hover:bg-indigo-200 hover:text-indigo-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-indigo-800 dark:hover:text-white"
+            class="bg-transparent hover:bg-indigo-200 hover:text-indigo-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-indigo-800 dark:hover:text-white"
           >
-            <span class="material-symbols-outlined">close</span>
+            <img src="/_assets/close.svg" alt="close" />
           </button>
         </div>
         <div class="px-2 pt-4 pb-1">
@@ -115,12 +115,12 @@ export const DeletePopup = (path: string) => (
 
 const NewButton = () => (
   <div
-    class="text-white text-center bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
+    class="bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
     hx-get="/_new"
     hx-target="#body"
     hx-swap="beforeend"
   >
-    <span class="material-symbols-outlined">add</span>
+    <img src="/_assets/add.svg" alt="add" class="w-full h-full" />
   </div>
 );
 
@@ -128,9 +128,9 @@ const EditButton = (path: string) => (
   <a
     hx-get={`/_redirect/${path}?edit`}
     hx-trigger="click, keyup[key=='e'] from:body"
-    class="text-white text-center bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
+    class="bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
   >
-    <span class="material-symbols-outlined">edit</span>
+    <img src="/_assets/edit.svg" alt="edit" class="w-full h-full" />
   </a>
 );
 
@@ -138,9 +138,9 @@ const ViewButton = (path: string) => (
   <a
     hx-get={`/_redirect/${path}`}
     hx-trigger="click, keyup[key=='Escape'] from:body"
-    class="text-white text-center bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
+    class="bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
   >
-    <span class="material-symbols-outlined">visibility</span>
+    <img src="/_assets/visibility.svg" alt="visibility" class="w-full h-full" />
   </a>
 );
 
@@ -148,21 +148,21 @@ const DeleteButton = (path: string) => (
   <a
     hx-get={`/_delete/${path}`}
     hx-trigger="click, keyup[key=='Backspace'] from:body"
-    class="text-white text-center bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
+    class="bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
   >
-    <span class="material-symbols-outlined">delete</span>
+    <img src="/_assets/delete.svg" alt="delete" class="w-full h-full" />
   </a>
 );
 
 export const Sidebar = (props: { paths: string[] }) => (
   <div id="drawer-navigation" class="fixed top-0 left-0 z-40 w-64 px-4 pt-1 overflow-y-auto bg-white dark:bg-indigo-800 flex flex-col justify-between h-full">
     <div
-      class="text-white text-center bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
+      class="bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
       hx-get="/_ok"
       hx-target="#drawer-navigation"
       hx-swap="delete"
     >
-      <span class="material-symbols-outlined">chevron_left</span>
+      <img src="/_assets/chevron_left.svg" alt="chevron_left" class="w-full h-full" />
     </div>
     <div class="py-4 overflow-y-auto h-full">
       <ul class="space-y-2 font-medium">
@@ -180,12 +180,12 @@ export const Sidebar = (props: { paths: string[] }) => (
 
 const SidebarButton = () => (
   <div
-    class="text-white text-center bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
+    class="bg-indigo-800 hover:bg-sky-100 hover:text-sky-900 border border-slate-300 rounded shadow-md cursor-pointer w-7 h-7"
     hx-get="/_sidebar"
     hx-target="#body"
     hx-swap="beforeend"
   >
-    <span class="material-symbols-outlined">chevron_right</span>
+    <img src="/_assets/chevron_right.svg" alt="chevron_right" class="w-full h-full" />
   </div>
 );
 
