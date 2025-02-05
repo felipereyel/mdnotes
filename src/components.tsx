@@ -13,6 +13,7 @@ const page = (title: string, Child: JSX.HTMLAttributes) => (
       <link rel="stylesheet" href="/_assets/tailwind-typography.css"></link>
 
       <script src="/_assets/htmx.js"></script>
+      <script src="/_assets/alpine.js"></script>
       <script src="/_assets/tailwind.js"></script>
 
       <style>
