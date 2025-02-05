@@ -27,7 +27,7 @@ class FileRepository implements IFileRepository {
 
     async getNotes(): Promise<string[]> {
         const paths = await this.getDeepMarkdownFiles(this.baseFolder);
-        return paths.map((path) => path.replace('.md', ''));
+        return paths.map((path) => path.replace('.md', '')).sort()
     }
 
     private getNoteFullPath(unsafePath: string): string {
